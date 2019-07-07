@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -57,5 +58,12 @@ public class RuleService {
         });
         rule.setId(id);
         return save(rule);
+    }
+
+    public void deleteById(String id) {
+        if (!ruleRepository.existsById(id)) {
+            throw new NoSuchElementException();
+        }
+        ruleRepository.deleteById(id);
     }
 }

@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -179,4 +180,36 @@ public class RuleServiceTest {
         verifyNoMoreInteractions(repository);
     }
 
+    @Test
+    public void shouldDeleteRuleWithGivenId() {
+        //given
+        String id = "id";
+        when(repository.existsById(id)).thenReturn(true);
+
+        //when
+        ruleService.deleteById(id);
+
+        //then
+        verify(repository).existsById(id);
+        verify(repository).deleteById(id);
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    public void shouldThrowAnExceptionWhenRuleDoesNotExist() {
+        //given
+        String id = "id";
+        when(repository.existsById(id)).thenReturn(false);
+
+        expectedException.expect(NoSuchElementException.class);
+
+        //when
+        try {
+            ruleService.deleteById(id);
+        } catch (NoSuchElementException ex) {
+            verify(repository).existsById(id);
+            verifyNoMoreInteractions(repository);
+            throw ex;
+        }
+    }
 }

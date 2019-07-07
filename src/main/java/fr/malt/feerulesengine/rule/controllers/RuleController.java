@@ -42,6 +42,12 @@ public class RuleController {
         return new ResponseEntity<>(savedRule, status);
     }
 
+    @DeleteMapping("/rules/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String id) {
+        ruleService.deleteById(id);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String badRequest(Exception ex) {

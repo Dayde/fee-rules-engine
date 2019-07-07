@@ -246,4 +246,16 @@ public class RuleControllerTest {
         verifyNoMoreInteractions(ruleService);
     }
 
+    @Test
+    public void shouldDeleteRuleWithGivenId() throws Exception {
+        String id = "id";
+
+        this.mockMvc.perform(
+                delete("/rules/" + id))
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$").doesNotExist());
+
+        verify(ruleService).deleteById(id);
+        verifyNoMoreInteractions(ruleService);
+    }
 }
