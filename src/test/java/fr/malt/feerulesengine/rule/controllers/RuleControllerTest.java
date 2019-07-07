@@ -3,7 +3,9 @@ package fr.malt.feerulesengine.rule.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.malt.feerulesengine.rule.exceptions.RuleAlreadyExistsException;
 import fr.malt.feerulesengine.rule.model.BusinessRule;
-import fr.malt.feerulesengine.rule.model.Restriction;
+import fr.malt.feerulesengine.rule.model.restrtiction.BooleanOperatorEnum;
+import fr.malt.feerulesengine.rule.model.restrtiction.BooleanRestriction;
+import fr.malt.feerulesengine.rule.model.restrtiction.Restriction;
 import fr.malt.feerulesengine.rule.services.RuleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +42,8 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule rule = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule rule = new BusinessRule(id, name, fee, restriction);
         when(ruleService.findAll()).thenReturn(List.of(rule));
 
         this.mockMvc.perform(
@@ -51,8 +53,10 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$[0].id").value(id))
                 .andExpect(jsonPath("$[0].name").value(name))
                 .andExpect(jsonPath("$[0].fee").value(fee))
-                .andExpect(jsonPath("$[0].restrictions").isArray())
-                .andExpect(jsonPath("$[0].restrictions").isEmpty());
+                .andExpect(jsonPath("$[0].restriction").isMap())
+                .andExpect(jsonPath("$[0].restriction.operator").value("AND"))
+                .andExpect(jsonPath("$[0].restriction.restrictions").isArray())
+                .andExpect(jsonPath("$[0].restriction.restrictions").isEmpty());
 
         verify(ruleService).findAll();
         verifyNoMoreInteractions(ruleService);
@@ -63,8 +67,8 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule rule = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule rule = new BusinessRule(id, name, fee, restriction);
         when(ruleService.findById(id)).thenReturn(java.util.Optional.of(rule));
 
         this.mockMvc.perform(
@@ -74,8 +78,10 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.fee").value(fee))
-                .andExpect(jsonPath("$.restrictions").isArray())
-                .andExpect(jsonPath("$.restrictions").isEmpty());
+                .andExpect(jsonPath("$.restriction").isMap())
+                .andExpect(jsonPath("$.restriction.operator").value("AND"))
+                .andExpect(jsonPath("$.restriction.restrictions").isArray())
+                .andExpect(jsonPath("$.restriction.restrictions").isEmpty());
 
         verify(ruleService).findById(id);
         verifyNoMoreInteractions(ruleService);
@@ -101,9 +107,9 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
         when(ruleService.save(ruleToSave)).thenReturn(ruleSaved);
 
 
@@ -116,8 +122,9 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.fee").value(fee))
-                .andExpect(jsonPath("$.restrictions").isArray())
-                .andExpect(jsonPath("$.restrictions").isEmpty());
+                .andExpect(jsonPath("$.restriction").isMap())
+                .andExpect(jsonPath("$.restriction.operator").value("AND"))
+                .andExpect(jsonPath("$.restriction.restrictions").isEmpty());
 
         verify(ruleService).save(ruleToSave);
         verifyNoMoreInteractions(ruleService);
@@ -128,9 +135,9 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
         when(ruleService.save(ruleToSave)).thenReturn(ruleSaved);
 
 
@@ -143,8 +150,9 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.fee").value(fee))
-                .andExpect(jsonPath("$.restrictions").isArray())
-                .andExpect(jsonPath("$.restrictions").isEmpty());
+                .andExpect(jsonPath("$.restriction").isMap())
+                .andExpect(jsonPath("$.restriction.operator").value("AND"))
+                .andExpect(jsonPath("$.restriction.restrictions").isEmpty());
 
         verify(ruleService).save(ruleToSave);
         verifyNoMoreInteractions(ruleService);
@@ -154,8 +162,8 @@ public class RuleControllerTest {
     public void shouldSend409WhenRuleAlreadyExistsInRepository() throws Exception {
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
         String message = "message";
         when(ruleService.save(ruleToSave)).thenThrow(new RuleAlreadyExistsException(message));
 
@@ -176,9 +184,9 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
         when(ruleService.saveWithId(id, ruleToSave)).thenReturn(ruleSaved);
 
         this.mockMvc.perform(
@@ -190,8 +198,9 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.fee").value(fee))
-                .andExpect(jsonPath("$.restrictions").isArray())
-                .andExpect(jsonPath("$.restrictions").isEmpty());
+                .andExpect(jsonPath("$.restriction").isMap())
+                .andExpect(jsonPath("$.restriction.operator").value("AND"))
+                .andExpect(jsonPath("$.restriction.restrictions").isEmpty());
 
         verify(ruleService).saveWithId(id, ruleToSave);
         verifyNoMoreInteractions(ruleService);
@@ -202,9 +211,9 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
         when(ruleService.saveWithId(id, ruleToSave)).thenReturn(ruleSaved);
 
         this.mockMvc.perform(
@@ -216,8 +225,9 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.fee").value(fee))
-                .andExpect(jsonPath("$.restrictions").isArray())
-                .andExpect(jsonPath("$.restrictions").isEmpty());
+                .andExpect(jsonPath("$.restriction").isMap())
+                .andExpect(jsonPath("$.restriction.operator").value("AND"))
+                .andExpect(jsonPath("$.restriction.restrictions").isEmpty());
 
         verify(ruleService).saveWithId(id, ruleToSave);
         verifyNoMoreInteractions(ruleService);
@@ -228,8 +238,8 @@ public class RuleControllerTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
+        Restriction restriction = new BooleanRestriction(BooleanOperatorEnum.AND, Collections.emptyList());
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
         String message = "message";
         when(ruleService.saveWithId(id, ruleToSave)).thenThrow(new IllegalArgumentException(message));
 

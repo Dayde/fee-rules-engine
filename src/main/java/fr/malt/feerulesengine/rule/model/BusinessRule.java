@@ -1,8 +1,8 @@
 package fr.malt.feerulesengine.rule.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.malt.feerulesengine.rule.model.restrtiction.Restriction;
 
-import java.util.List;
 import java.util.Objects;
 
 
@@ -18,13 +18,13 @@ public class BusinessRule {
     private float fee;
 
     @JsonProperty
-    private List<Restriction> restrictions;
+    private Restriction restriction;
 
-    public BusinessRule(String id, String name, float fee, List<Restriction> restrictions) {
+    public BusinessRule(String id, String name, float fee, Restriction restriction) {
         this.id = id;
         this.name = name;
         this.fee = fee;
-        this.restrictions = restrictions;
+        this.restriction = restriction;
     }
 
     public String getId() {
@@ -39,8 +39,8 @@ public class BusinessRule {
         return fee;
     }
 
-    public List<Restriction> getRestrictions() {
-        return restrictions;
+    public Restriction getRestriction() {
+        return restriction;
     }
 
     public void setId(String id) {
@@ -55,8 +55,8 @@ public class BusinessRule {
         this.fee = fee;
     }
 
-    public void setRestrictions(List<Restriction> restrictions) {
-        this.restrictions = restrictions;
+    public void setRestriction(Restriction restriction) {
+        this.restriction = restriction;
     }
 
     @Override

@@ -2,7 +2,7 @@ package fr.malt.feerulesengine.rule.services;
 
 import fr.malt.feerulesengine.rule.exceptions.RuleAlreadyExistsException;
 import fr.malt.feerulesengine.rule.model.BusinessRule;
-import fr.malt.feerulesengine.rule.model.Restriction;
+import fr.malt.feerulesengine.rule.model.restrtiction.Restriction;
 import fr.malt.feerulesengine.rule.repositories.RuleRepository;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -69,9 +68,9 @@ public class RuleServiceTest {
         // given
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule("id", name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule("id", name, fee, restriction);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         when(repository.save(ruleToSave)).thenReturn(ruleSaved);
@@ -92,10 +91,10 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule existingRule = new BusinessRule(id, "otherName", 1, restrictions);
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule existingRule = new BusinessRule(id, "otherName", 1, restriction);
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findByName(name)).thenReturn(Optional.of(existingRule));
         when(repository.save(ruleToSave)).thenReturn(ruleSaved);
@@ -115,9 +114,9 @@ public class RuleServiceTest {
         // given
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
-        BusinessRule existingRule = new BusinessRule("existingId", name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
+        BusinessRule existingRule = new BusinessRule("existingId", name, fee, restriction);
 
         when(repository.findByName(name)).thenReturn(Optional.of(existingRule));
 
@@ -134,10 +133,10 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
-        BusinessRule oldRule = new BusinessRule(id, "otherName", 8, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
+        BusinessRule oldRule = new BusinessRule(id, "otherName", 8, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findById(id)).thenReturn(Optional.of(oldRule));
         when(repository.findByName(name)).thenReturn(Optional.empty());
@@ -160,10 +159,10 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
-        BusinessRule oldRule = new BusinessRule(id, name, 8, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
+        BusinessRule oldRule = new BusinessRule(id, name, 8, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findById(id)).thenReturn(Optional.of(oldRule));
         when(repository.findByName(name)).thenReturn(Optional.of(oldRule));
@@ -186,9 +185,9 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
         when(repository.findByName(name)).thenReturn(Optional.empty());
@@ -211,10 +210,10 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule("anotherId", name, fee, restrictions);
-        BusinessRule oldRule = new BusinessRule(id, name, 8, restrictions);
-        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule("anotherId", name, fee, restriction);
+        BusinessRule oldRule = new BusinessRule(id, name, 8, restriction);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findById(id)).thenReturn(Optional.of(oldRule));
         expectedException.expect(IllegalArgumentException.class);
@@ -237,8 +236,8 @@ public class RuleServiceTest {
         String id = "id";
         String name = "name";
         float fee = 10;
-        List<Restriction> restrictions = Collections.emptyList();
-        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
+        Restriction restriction = mock(Restriction.class);
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restriction);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
         expectedException.expect(IllegalArgumentException.class);
