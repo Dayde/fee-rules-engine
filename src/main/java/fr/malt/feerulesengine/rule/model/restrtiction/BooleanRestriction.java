@@ -1,6 +1,7 @@
 package fr.malt.feerulesengine.rule.model.restrtiction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.malt.feerulesengine.fee.model.Mission;
 
 import java.util.List;
 
@@ -34,5 +35,10 @@ public class BooleanRestriction extends Restriction {
 
     public void setRestrictions(List<Restriction> restrictions) {
         this.restrictions = restrictions;
+    }
+
+    @Override
+    public boolean isFulfilledBy(Mission mission) {
+        return operator.isFulfilledBy(mission, restrictions);
     }
 }

@@ -1,6 +1,7 @@
 package fr.malt.feerulesengine.rule.model.restrtiction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import fr.malt.feerulesengine.fee.model.Mission;
 
 public class ComparisonRestriction extends Restriction {
 
@@ -44,5 +45,10 @@ public class ComparisonRestriction extends Restriction {
 
     public void setValue(Object value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean isFulfilledBy(Mission mission) {
+        return operator.isFulfilledBy(mission, attributeName, value);
     }
 }

@@ -4,7 +4,6 @@ import fr.malt.feerulesengine.fee.model.Fee;
 import fr.malt.feerulesengine.fee.model.Mission;
 import fr.malt.feerulesengine.rule.model.BusinessRule;
 import fr.malt.feerulesengine.rule.services.RuleService;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,12 @@ public class FeeService {
 
     public Fee computeFee(Mission mission) {
         List<BusinessRule> rules = ruleService.findAll();
-        if (rules.isEmpty()) {
-            return new Fee(DEFAULT_FEE);
-        } else {
-            throw new NotImplementedException("No rule matching yet");
-        }
+
+        return rules.stream()
+                .filter(rule -> rule.getRestriction().isFulfilledBy(mission))
+                .sorted()
+                .findFirst()
+                .map(rule -> new Fee(rule.getFee(), rule.getName()))
+                .orElse(new Fee(DEFAULT_FEE));
     }
 }

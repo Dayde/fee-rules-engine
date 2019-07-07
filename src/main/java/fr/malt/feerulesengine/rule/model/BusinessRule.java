@@ -6,7 +6,7 @@ import fr.malt.feerulesengine.rule.model.restrtiction.Restriction;
 import java.util.Objects;
 
 
-public class BusinessRule {
+public class BusinessRule implements Comparable<BusinessRule> {
 
     @JsonProperty
     private String id;
@@ -70,5 +70,10 @@ public class BusinessRule {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(BusinessRule o) {
+        return Float.compare(getFee(), o.getFee());
     }
 }

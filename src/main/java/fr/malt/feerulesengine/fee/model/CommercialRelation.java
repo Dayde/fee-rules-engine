@@ -11,9 +11,12 @@ public class CommercialRelation {
     @JsonProperty
     private DateTime lastMission;
 
+    private long duration;
+
     public CommercialRelation(DateTime firstMission, DateTime lastMission) {
         this.firstMission = firstMission;
         this.lastMission = lastMission;
+        this.duration = lastMission.getMillis() - firstMission.getMillis();
     }
 
     public DateTime getFirstMission() {
@@ -30,5 +33,13 @@ public class CommercialRelation {
 
     public void setLastMission(DateTime lastMission) {
         this.lastMission = lastMission;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }
