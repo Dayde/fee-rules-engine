@@ -1,7 +1,10 @@
 package fr.malt.feerulesengine.rule.repositories;
 
-import fr.malt.feerulesengine.rule.model.Rule;
+import fr.malt.feerulesengine.rule.model.BusinessRule;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RuleRepository extends MongoRepository<Rule, String> {
+import java.util.Optional;
+
+public interface RuleRepository extends MongoRepository<BusinessRule, String> {
+    Optional<BusinessRule> findByName(String name);
 }
