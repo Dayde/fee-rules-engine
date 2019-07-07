@@ -2,18 +2,26 @@ package fr.malt.feerulesengine.fee.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Objects;
-
 public class Person {
 
     @JsonProperty
+    private String ip;
+
     private String countryCode;
 
     public Person() {
     }
 
-    public Person(String countryCode) {
-        this.countryCode = countryCode;
+    public Person(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getCountryCode() {
@@ -22,18 +30,5 @@ public class Person {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(countryCode, person.countryCode);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(countryCode);
     }
 }

@@ -103,7 +103,9 @@ public class ComparisonRestrictionTest {
         // given
         Restriction eq = new ComparisonRestriction("client.countryCode", ComparisonOperatorEnum.EQ, "FR");
 
-        Mission mission = new Mission(new Person("FR"), null, 0, null);
+        Person client = new Person();
+        client.setCountryCode("FR");
+        Mission mission = new Mission(client, null, 0, null);
 
         // when
         boolean fulfilled = eq.isFulfilledBy(mission);
@@ -117,7 +119,9 @@ public class ComparisonRestrictionTest {
         // given
         Restriction eq = new ComparisonRestriction("client.countryCode", ComparisonOperatorEnum.EQ, "FR");
 
-        Mission mission = new Mission(new Person("ES"), null, 0, null);
+        Person client = new Person();
+        client.setCountryCode("ES");
+        Mission mission = new Mission(client, null, 0, null);
 
         // when
         boolean fulfilled = eq.isFulfilledBy(mission);

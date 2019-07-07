@@ -8,6 +8,7 @@ import fr.malt.feerulesengine.fee.model.Fee;
 import fr.malt.feerulesengine.fee.model.Mission;
 import fr.malt.feerulesengine.fee.model.Person;
 import fr.malt.feerulesengine.fee.services.FeeService;
+import fr.malt.feerulesengine.geolocation.GeolocationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,13 @@ public class FeeControllerTest {
     @MockBean
     private FeeService feeService;
 
+    @MockBean
+    private GeolocationService geolocationService;
+
     @Test
     public void shouldFeeComputedInFeeService() throws Exception {
-        Person client = new Person("FR");
-        Person freelancer = new Person("FR");
+        Person client = new Person("77.204.3.150");
+        Person freelancer = new Person("77.204.3.150");
         long missionLength = Duration.ofDays(20).toMillis();
         CommercialRelation commercialRelation = new CommercialRelation(now().minusMonths(4), now().minusDays(2));
         Mission mission = new Mission(client, freelancer, missionLength, commercialRelation);
