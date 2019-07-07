@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -47,6 +48,38 @@ public class RuleControllerTest {
                 .andExpect(jsonPath("$[0].fee").value(fee))
                 .andExpect(jsonPath("$[0].restrictions").isArray())
                 .andExpect(jsonPath("$[0].restrictions").isEmpty());
+    }
+
+    @Test
+    public void shouldReturnRuleFoundInRepository() throws Exception {
+        String id = "id";
+        String name = "name";
+        float fee = 10;
+        List<Restriction> restrictions = Collections.emptyList();
+        Rule rule = new Rule(id, name, fee, restrictions);
+        when(ruleService.findById(id)).thenReturn(java.util.Optional.of(rule));
+
+        this.mockMvc.perform(
+                get("/rules/id"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.fee").value(fee))
+                .andExpect(jsonPath("$.restrictions").isArray())
+                .andExpect(jsonPath("$.restrictions").isEmpty());
+    }
+
+    @Test
+    public void shouldSend404WhenNotFoundInRepository() throws Exception {
+        String id = "id";
+        when(ruleService.findById(id)).thenReturn(Optional.empty());
+
+        this.mockMvc.perform(
+                get("/rules/id"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").isString())
+                .andExpect(jsonPath("$").value("Rule not found"));
     }
 
 }

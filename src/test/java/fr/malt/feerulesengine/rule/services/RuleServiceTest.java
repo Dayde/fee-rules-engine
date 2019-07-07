@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,6 +36,20 @@ public class RuleServiceTest {
 
         // then
         assertThat(result).containsExactly(rule);
+    }
+
+    @Test
+    public void shouldReturnRuleFoundInRepository() {
+        // given
+        Optional<Rule> rule = ofNullable(mock(Rule.class));
+        String id = "id";
+        when(repository.findById(id)).thenReturn(rule);
+
+        // when
+        Optional<Rule> result = ruleService.findById(id);
+
+        // then
+        assertThat(result).isEqualTo(rule);
     }
 
 }
