@@ -181,6 +181,81 @@ public class RuleServiceTest {
     }
 
     @Test
+    public void shouldInsertRuleWhenIdIsPassedRuleIdIsNullAndNoRuleWithTheIdPasedExists() {
+        // given
+        String id = "id";
+        String name = "name";
+        float fee = 10;
+        List<Restriction> restrictions = Collections.emptyList();
+        BusinessRule ruleToSave = new BusinessRule(null, name, fee, restrictions);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findByName(name)).thenReturn(Optional.empty());
+        when(repository.save(ruleToSave)).thenReturn(ruleSaved);
+
+        // when
+        BusinessRule result = ruleService.saveWithId(id, ruleToSave);
+
+        // then
+        assertThat(result).isEqualTo(ruleSaved);
+        verify(repository).findById(id);
+        verify(repository).findByName(name);
+        verify(repository).save(ruleToSave);
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    public void shouldNotUpdateRuleWhenIdExistsAndRuleIdDiffers() {
+        // given
+        String id = "id";
+        String name = "name";
+        float fee = 10;
+        List<Restriction> restrictions = Collections.emptyList();
+        BusinessRule ruleToSave = new BusinessRule("anotherId", name, fee, restrictions);
+        BusinessRule oldRule = new BusinessRule(id, name, 8, restrictions);
+        BusinessRule ruleSaved = new BusinessRule(id, name, fee, restrictions);
+
+        when(repository.findById(id)).thenReturn(Optional.of(oldRule));
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("While updating, id in uri (\"id\") should be equal to body id property (\"anotherId\")");
+
+        // when
+        try {
+            ruleService.saveWithId(id, ruleToSave);
+        } catch (IllegalArgumentException ex) {
+            // then
+            verify(repository).findById(id);
+            verifyNoMoreInteractions(repository);
+            throw ex;
+        }
+    }
+
+    @Test
+    public void shouldNotUpdateRuleWhenIdDoesNotExistAndGivenRuleHasItSet() {
+        // given
+        String id = "id";
+        String name = "name";
+        float fee = 10;
+        List<Restriction> restrictions = Collections.emptyList();
+        BusinessRule ruleToSave = new BusinessRule(id, name, fee, restrictions);
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("While inserting a new rule, body id property should not be set");
+
+        // when
+        try {
+            ruleService.saveWithId(id, ruleToSave);
+        } catch (IllegalArgumentException ex) {
+            // then
+            verify(repository).findById(id);
+            verifyNoMoreInteractions(repository);
+            throw ex;
+        }
+    }
+
+    @Test
     public void shouldDeleteRuleWithGivenId() {
         //given
         String id = "id";

@@ -43,7 +43,7 @@ public class RuleService {
             if (!existingRule.getId().equals(rule.getId())) {
                 throw new IllegalArgumentException(
                         String.format(
-                                "While updating, id in uri (\"%s\") should be equal to body id property (\"%s\"",
+                                "While updating, id in uri (\"%s\") should be equal to body id property (\"%s\")",
                                 id, rule.getId()
                         ));
             }
