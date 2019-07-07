@@ -57,7 +57,7 @@ public class FeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isMap())
                 .andExpect(jsonPath("$.fee").value(DEFAULT_FEE))
-                .andExpect(jsonPath("$.reason").doesNotExist());
+                .andExpect(jsonPath("$.reason").doesNotHaveJsonPath());
 
         verify(feeService).computeFee(any(Mission.class));
         verifyNoMoreInteractions(feeService);
